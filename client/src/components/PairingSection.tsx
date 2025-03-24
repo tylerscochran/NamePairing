@@ -40,10 +40,8 @@ const convertToHTML = (pairs: Person[][]): string => {
   <h1>Generated Pairs</h1>
 `;
   
-  // Generate HTML content for each pair
-  pairs.forEach((pair, index) => {
-    html += `  <h2>Pair ${index + 1}</h2>\n`;
-    
+  // Generate HTML content for each pair - without titles
+  pairs.forEach((pair) => {
     if (pair.length >= 2) {
       const person1 = pair[0];
       const person2 = pair[1];
