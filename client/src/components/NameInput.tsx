@@ -10,9 +10,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import NameTag from "./NameTag";
 import { Person } from "@shared/schema";
-import { UserPlus2, Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2 } from "lucide-react";
 
 interface NameInputProps {
   persons: Person[];
@@ -56,27 +55,26 @@ export default function NameInput({
         </div>
       )}
 
-      {/* Name Tags Display */}
+      {/* Summary Display */}
       {persons.length > 0 && (
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-2">
-            {persons.map((person, index) => (
-              <NameTag 
-                key={`${person.name}-${index}`}
-                name={person.name}
-                url={person.url}
-                onRemove={() => onRemovePerson(person)}
-              />
-            ))}
+        <div className="py-8 px-6 rounded-lg bg-blue-50 border border-blue-100 text-center mb-4">
+          <div className="text-4xl font-bold text-blue-600 mb-2">
+            {persons.length}
+          </div>
+          <div className="text-lg text-blue-800">
+            {persons.length === 1 ? 'Name' : 'Names'} Imported
+          </div>
+          <div className="text-sm text-blue-600 mt-1">
+            Ready for pairing
           </div>
         </div>
       )}
 
-      {/* Counter and Actions */}
+      {/* Actions */}
       {persons.length > 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
           <div className="text-gray-600">
-            <span className="font-medium">{persons.length}</span> {persons.length === 1 ? 'person' : 'people'} imported
+            Data imported successfully. Click "Generate Pairs" below to create random pairs.
           </div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
