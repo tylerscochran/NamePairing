@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,12 +8,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Person } from "@shared/schema";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash } from "lucide-react";
+import { UploadCloud, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BulkAddModalProps {
   isOpen: boolean;
@@ -26,15 +25,17 @@ export default function BulkAddModal({
   onClose,
   onAddPersons,
 }: BulkAddModalProps) {
-  const [activeTab, setActiveTab] = useState("manual");
-  const [personEntries, setPersonEntries] = useState<Person[]>([{ name: "", url: "" }]);
-  const [bulkText, setBulkText] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [parsedData, setParsedData] = useState<Person[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Reset state when the modal opens/closes
   const resetState = () => {
-    setPersonEntries([{ name: "", url: "" }]);
-    setBulkText("");
-    setActiveTab("manual");
+    setCsvFile(null);
+    setParsedData([]);
+    setError(null);
   };
   
   const handleClose = () => {
@@ -42,74 +43,114 @@ export default function BulkAddModal({
     onClose();
   };
   
-  // Handle adding a new empty entry
-  const addEntry = () => {
-    setPersonEntries([...personEntries, { name: "", url: "" }]);
-  };
-  
-  // Handle removing an entry
-  const removeEntry = (index: number) => {
-    const newEntries = [...personEntries];
-    newEntries.splice(index, 1);
-    if (newEntries.length === 0) {
-      newEntries.push({ name: "", url: "" });
+  const handleFileSelect = (file: File) => {
+    // Check if it's a CSV file
+    if (file.type !== "text/csv" && !file.name.endsWith('.csv')) {
+      setError("Please upload a CSV file.");
+      setCsvFile(null);
+      return;
     }
-    setPersonEntries(newEntries);
-  };
-  
-  // Handle updating an entry
-  const updateEntry = (index: number, field: keyof Person, value: string) => {
-    const newEntries = [...personEntries];
-    newEntries[index] = { ...newEntries[index], [field]: value };
-    setPersonEntries(newEntries);
-  };
-  
-  // Handle parsing bulk text
-  const parseBulkText = () => {
-    // Split by lines
-    const lines = bulkText.split('\n').filter(line => line.trim() !== '');
     
-    const entries: Person[] = [];
+    setCsvFile(file);
+    setError(null);
     
-    for (const line of lines) {
-      // Check if the line has a URL using a simple pattern
-      const urlPattern = /\[(https?:\/\/[^\s\]]+)\]/;
-      const match = line.match(urlPattern);
-      
-      if (match) {
-        // Extract the name (everything before the URL part)
-        const url = match[1];
-        const name = line.replace(urlPattern, '').trim();
-        if (name) {
-          entries.push({ name, url });
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const csv = e.target?.result as string;
+        const persons = parseCSV(csv);
+        
+        if (persons.length === 0) {
+          setError("No valid entries found in the CSV file.");
+        } else {
+          setParsedData(persons);
         }
-      } else {
-        // If no URL, just add the name
-        const name = line.trim();
+      } catch (err) {
+        setError("Failed to parse CSV file. Please check the format.");
+        console.error(err);
+      }
+    };
+    
+    reader.onerror = () => {
+      setError("Failed to read the file. Please try again.");
+    };
+    
+    reader.readAsText(file);
+  };
+  
+  const parseCSV = (csv: string): Person[] => {
+    const lines = csv.split(/\r?\n/).filter(line => line.trim());
+    const persons: Person[] = [];
+    
+    // Check if the first line is a header
+    const firstLine = lines[0].toLowerCase();
+    const hasHeader = firstLine.includes('name') && firstLine.includes('url');
+    
+    // Start from index 1 if it has a header, otherwise from 0
+    const startIdx = hasHeader ? 1 : 0;
+    
+    for (let i = startIdx; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      // Split by comma but handle quoted values
+      const values = line.match(/(?:^|,)("(?:[^"]*(?:""[^"]*)*)"|[^,]*)/g);
+      
+      if (values && values.length >= 1) {
+        // Clean up the values
+        const cleanValues = values.map(v => {
+          // Remove leading comma if exists
+          let value = v.startsWith(',') ? v.slice(1) : v;
+          // Remove surrounding quotes and replace double quotes with single
+          if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1).replace(/""/g, '"');
+          }
+          return value.trim();
+        });
+        
+        const name = cleanValues[0];
+        const url = cleanValues.length > 1 ? cleanValues[1] : '';
+        
         if (name) {
-          entries.push({ name, url: "" });
+          persons.push({ name, url });
         }
       }
     }
     
-    return entries;
+    return persons;
   };
   
-  // Handle form submission
-  const handleSubmit = () => {
-    let persons: Person[] = [];
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+  
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+  
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
     
-    if (activeTab === "manual") {
-      // Filter out empty entries
-      persons = personEntries.filter(person => person.name.trim() !== "");
-    } else {
-      persons = parseBulkText();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFileSelect(e.dataTransfer.files[0]);
     }
-    
-    if (persons.length > 0) {
-      onAddPersons(persons);
+  };
+  
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileSelect(e.target.files[0]);
+    }
+  };
+  
+  const handleSubmit = () => {
+    if (parsedData.length > 0) {
+      onAddPersons(parsedData);
       resetState();
       onClose();
+    } else if (!error && csvFile) {
+      setError("No valid entries found in the CSV file.");
     }
   };
 
@@ -117,79 +158,62 @@ export default function BulkAddModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Add Names & URLs</DialogTitle>
+          <DialogTitle>Import Names & URLs</DialogTitle>
           <DialogDescription>
-            Add names and optional URLs for each person.
+            Upload a CSV file containing names and URLs.
           </DialogDescription>
         </DialogHeader>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="manual">Manual Entry</TabsTrigger>
-            <TabsTrigger value="bulk">Text Format</TabsTrigger>
-          </TabsList>
+        <div className="py-4 space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           
-          <TabsContent value="manual" className="py-4">
-            <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
-              {personEntries.map((person, index) => (
-                <div key={index} className="flex gap-3 items-center">
-                  <div className="flex-1 space-y-2">
-                    <div>
-                      <Label htmlFor={`name-${index}`}>Name</Label>
-                      <Input
-                        id={`name-${index}`}
-                        value={person.name}
-                        onChange={(e) => updateEntry(index, "name", e.target.value)}
-                        placeholder="Enter name"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`url-${index}`}>URL (optional)</Label>
-                      <Input
-                        id={`url-${index}`}
-                        value={person.url || ""}
-                        onChange={(e) => updateEntry(index, "url", e.target.value)}
-                        placeholder="https://example.com"
-                      />
-                    </div>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeEntry(index)}
-                    className="self-center mt-5"
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+          <div 
+            className={`border-2 border-dashed rounded-lg p-8 text-center ${
+              isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+            } transition-colors duration-200 cursor-pointer`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileInput}
+              accept=".csv"
+              className="hidden"
+            />
             
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addEntry}
-              className="mt-4 w-full"
-            >
-              <Plus className="h-4 w-4 mr-2" /> Add Another Person
-            </Button>
-          </TabsContent>
+            <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">
+              {csvFile ? csvFile.name : "Drag and drop your CSV file here"}
+            </h3>
+            <p className="mt-1 text-xs text-gray-500">
+              {csvFile 
+                ? `${parsedData.length} entries found` 
+                : "Or click to browse (CSV format only)"}
+            </p>
+          </div>
           
-          <TabsContent value="bulk" className="py-4">
-            <div className="space-y-2">
-              <Label htmlFor="bulk-text">Enter names and URLs in format: "Name [URL]"</Label>
-              <Textarea
-                id="bulk-text"
-                value={bulkText}
-                onChange={(e) => setBulkText(e.target.value)}
-                placeholder="John Smith [https://example.com/john]&#10;Jane Doe&#10;Mike Johnson [https://linkedin.com/in/mike]"
-                className="min-h-60"
-              />
-              <p className="text-xs text-gray-500">One entry per line. URLs are optional and should be in square brackets.</p>
+          <div className="text-sm">
+            <h4 className="font-medium mb-1">CSV Format</h4>
+            <p className="text-gray-600 mb-2">Your CSV file should have the following format:</p>
+            <div className="bg-gray-100 p-2 rounded text-xs font-mono">
+              Name,URL<br />
+              John Smith,https://example.com/john<br />
+              Jane Doe,https://linkedin.com/in/jane
             </div>
-          </TabsContent>
-        </Tabs>
+            <p className="mt-2 text-gray-600 text-xs">
+              The URL column is optional. If your CSV doesn't have a header row, 
+              the first column will be treated as names and the second as URLs.
+            </p>
+          </div>
+        </div>
         
         <DialogFooter className="flex justify-end gap-3">
           <Button variant="outline" onClick={handleClose}>
@@ -197,9 +221,12 @@ export default function BulkAddModal({
           </Button>
           <Button 
             onClick={handleSubmit}
+            disabled={!csvFile || parsedData.length === 0}
             className="bg-blue-600 text-white hover:bg-blue-700"
           >
-            Add Names
+            {parsedData.length > 0 
+              ? `Import ${parsedData.length} Entries` 
+              : 'Import'}
           </Button>
         </DialogFooter>
       </DialogContent>
