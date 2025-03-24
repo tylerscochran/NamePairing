@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NameInput from "@/components/NameInput";
 import PairingSection from "@/components/PairingSection";
-import InfoSection from "@/components/InfoSection";
 import BulkAddModal from "@/components/BulkAddModal";
 import { useToast } from "@/hooks/use-toast";
 import { generatePairs } from "@/lib/utils";
@@ -141,13 +140,11 @@ export default function Home() {
             pairsGenerated={pairsGenerated}
             onGeneratePairs={handleGeneratePairs}
           />
-
-          <InfoSection />
         </main>
 
         {/* Footer */}
         <footer className="mt-8 text-center text-gray-500 text-sm py-4">
-          <p>Name Pairing Tool - A simple utility for randomly pairing people with their profile links</p>
+          <p>Name Pairing Tool - A simple utility for randomly pairing people with other people's profile links</p>
         </footer>
       </div>
 
