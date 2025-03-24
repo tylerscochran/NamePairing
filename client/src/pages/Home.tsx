@@ -78,8 +78,8 @@ export default function Home() {
     });
   };
 
-  const handleBulkAdd = (persons: Person[]) => {
-    if (persons.length === 0) {
+  const handleBulkAdd = (newPersons: Person[]) => {
+    if (newPersons.length === 0) {
       toast({
         title: "No valid entries",
         description: "No valid persons found in the input",
@@ -88,22 +88,20 @@ export default function Home() {
       return;
     }
 
-    let addedCount = 0;
-    const existingNames = persons.map(p => p.name);
-    const uniquePersons = persons.filter(person => {
-      if (!persons.some(p => p.name === person.name)) {
-        addedCount++;
-        return true;
-      }
-      return false;
-    });
+    // Filter out duplicates comparing with existing persons list
+    const uniquePersons = newPersons.filter(newPerson => 
+      !persons.some(existingPerson => existingPerson.name === newPerson.name)
+    );
+    
+    const addedCount = uniquePersons.length;
 
     if (addedCount > 0) {
       setPersons((prevPersons) => [...prevPersons, ...uniquePersons]);
       
       if (pairsGenerated) {
         // Regenerate pairs if we're adding persons and pairs are already generated
-        const newPairs = generatePairs([...persons, ...uniquePersons]);
+        const updatedPersons = [...persons, ...uniquePersons];
+        const newPairs = generatePairs(updatedPersons);
         setPairs(newPairs);
       }
       
@@ -127,7 +125,7 @@ export default function Home() {
         <header className="text-center mb-8">
           <h1 className="text-3xl font-semibold text-gray-800 mb-2">Name Pairing Tool</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Enter a list of names to generate random pairs. Perfect for team activities, 
+            Add names with optional URLs to generate random pairs. Perfect for team activities, 
             study groups, or any scenario requiring random partner assignments.
           </p>
         </header>
@@ -135,8 +133,7 @@ export default function Home() {
         {/* Main Content */}
         <main className="flex flex-col gap-8">
           <NameInput 
-            persons={persons} 
-            onAddPerson={addPerson} 
+            persons={persons}
             onRemovePerson={removePerson} 
             onClearPersons={clearPersons}
             onBulkAdd={() => setIsBulkModalOpen(true)}
@@ -154,7 +151,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-8 text-center text-gray-500 text-sm py-4">
-          <p>Name Pairing Tool - A simple utility for randomly pairing names</p>
+          <p>Name Pairing Tool - A simple utility for randomly pairing people with their profile links</p>
         </footer>
       </div>
 
