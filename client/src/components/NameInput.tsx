@@ -87,16 +87,16 @@ export default function NameInput({
                 Clear All
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="bg-gray-800 border-gray-700 text-gray-100">
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogTitle className="text-gray-100">Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription className="text-gray-300">
                   This will clear all entries from your list. This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={onClearPersons}>
+                <AlertDialogCancel className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600">Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={onClearPersons} className="bg-red-600 text-white hover:bg-red-700">
                   Clear All
                 </AlertDialogAction>
               </AlertDialogFooter>
