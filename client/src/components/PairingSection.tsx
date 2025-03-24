@@ -1,5 +1,34 @@
 import { Button } from "@/components/ui/button";
 
+// Helper function to convert pairs to CSV format
+const convertToCSV = (pairs: string[][]): string => {
+  const csvRows = [];
+  
+  // Add header row
+  csvRows.push('Pair Number,Names');
+  
+  // Add data rows
+  pairs.forEach((pair, index) => {
+    csvRows.push(`${index + 1},"${pair.join(', ')}"`);
+  });
+  
+  return csvRows.join('\n');
+};
+
+// Helper function to download CSV
+const downloadCSV = (pairs: string[][]): void => {
+  const csvContent = convertToCSV(pairs);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'name_pairs.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 interface PairingSectionProps {
   names: string[];
   pairs: string[][];
@@ -40,12 +69,24 @@ export default function PairingSection({
         <div className="flex gap-3">
           <Button
             onClick={onGeneratePairs}
-            className="bg-secondary hover:bg-indigo-600"
+            variant="default"
+            className="bg-blue-600 text-white hover:bg-blue-700"
             disabled={names.length === 0}
           >
             <i className="fas fa-random mr-2"></i>
             {pairsGenerated ? "Regenerate Pairs" : "Generate Pairs"}
           </Button>
+          
+          {pairsGenerated && (
+            <Button
+              onClick={() => downloadCSV(pairs)}
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+            >
+              <i className="fas fa-download mr-2"></i>
+              Export CSV
+            </Button>
+          )}
         </div>
       </div>
 
