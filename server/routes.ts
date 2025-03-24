@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { nameSchema, bulkNamesSchema, insertNameListSchema } from "@shared/schema";
+import { personSchema, bulkPersonsSchema, insertNameListSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -11,18 +11,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API endpoint to save a name list
   app.post("/api/namelists", async (req: Request, res: Response) => {
     try {
-      const { names } = req.body;
+      const { persons } = req.body;
       
-      // Validate the names array
-      const validatedNames = bulkNamesSchema.safeParse(names);
+      // Validate the persons array
+      const validatedPersons = bulkPersonsSchema.safeParse(persons);
       
-      if (!validatedNames.success) {
-        const error = fromZodError(validatedNames.error);
+      if (!validatedPersons.success) {
+        const error = fromZodError(validatedPersons.error);
         return res.status(400).json({ message: error.message });
       }
       
       // Create a new name list
-      const nameList = await storage.createNameList({ names: validatedNames.data });
+      const nameList = await storage.createNameList({ persons: validatedPersons.data });
       return res.status(201).json(nameList);
     } catch (error) {
       console.error("Error creating name list:", error);
@@ -56,21 +56,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/namelists/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { names } = req.body;
+      const { persons } = req.body;
       
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID format" });
       }
       
-      // Validate the names array
-      const validatedNames = bulkNamesSchema.safeParse(names);
+      // Validate the persons array
+      const validatedPersons = bulkPersonsSchema.safeParse(persons);
       
-      if (!validatedNames.success) {
-        const error = fromZodError(validatedNames.error);
+      if (!validatedPersons.success) {
+        const error = fromZodError(validatedPersons.error);
         return res.status(400).json({ message: error.message });
       }
       
-      const updatedNameList = await storage.updateNameList(id, { names: validatedNames.data });
+      const updatedNameList = await storage.updateNameList(id, { persons: validatedPersons.data });
       
       if (!updatedNameList) {
         return res.status(404).json({ message: "Name list not found" });
@@ -105,12 +105,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Validate a single name
-  app.post("/api/validate-name", (req: Request, res: Response) => {
+  // Validate a single person entry (name + URL)
+  app.post("/api/validate-person", (req: Request, res: Response) => {
     try {
-      const { name } = req.body;
+      const person = req.body;
       
-      const result = nameSchema.safeParse(name);
+      const result = personSchema.safeParse(person);
       
       if (!result.success) {
         const error = fromZodError(result.error);
@@ -122,13 +122,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       return res.json({ 
         valid: true, 
-        name: result.data 
+        person: result.data 
       });
     } catch (error) {
-      console.error("Error validating name:", error);
+      console.error("Error validating person:", error);
       return res.status(500).json({ 
         valid: false, 
-        message: "Server error validating name" 
+        message: "Server error validating person" 
       });
     }
   });
