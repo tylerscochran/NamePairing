@@ -1,42 +1,76 @@
 import { Button } from "@/components/ui/button";
 import { Person } from "@shared/schema";
-import { DownloadCloud, Shuffle, UserCircle2, Users2 } from "lucide-react";
+import { Download, Shuffle, Users2 } from "lucide-react";
 
-// Helper function to convert pairs to CSV format
-const convertToCSV = (pairs: Person[][]): string => {
-  let csv = 'Pair Number,Person 1 Name,Person 1 URL,Person 2 Name,Person 2 URL\n';
+// Helper function to convert pairs to HTML format
+const convertToHTML = (pairs: Person[][]): string => {
+  // HTML header with basic styling
+  let html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Pairs</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+    p {
+      margin: 12px 0;
+    }
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generated Pairs</h1>
+`;
   
-  // Add data rows
+  // Generate HTML content for each pair
   pairs.forEach((pair, index) => {
-    const pairNumber = index + 1;
-    const firstPersonName = pair.length > 0 ? pair[0].name : '';
-    const firstPersonUrl = pair.length > 0 ? (pair[0].url || '') : '';
-    const secondPersonName = pair.length > 1 ? pair[1].name : '';
-    const secondPersonUrl = pair.length > 1 ? (pair[1].url || '') : '';
+    html += `  <h2>Pair ${index + 1}</h2>\n`;
     
-    // Escape fields with quotes if they contain commas
-    const escapeCsv = (field: string) => {
-      if (field.includes(',') || field.includes('"') || field.includes('\n')) {
-        return `"${field.replace(/"/g, '""')}"`;
-      }
-      return field;
-    };
-    
-    // Build CSV row
-    csv += `${pairNumber},${escapeCsv(firstPersonName)},${escapeCsv(firstPersonUrl)},${escapeCsv(secondPersonName)},${escapeCsv(secondPersonUrl)}\n`;
+    if (pair.length >= 2) {
+      const person1 = pair[0];
+      const person2 = pair[1];
+      const url1 = person1.url || "#";
+      
+      // Create the HTML entry in the format: <p><a href="[URL1]" alt="[Name1]">[Name2]</a></p>
+      html += `  <p><a href="${url1}" alt="${person1.name}">${person2.name}</a></p>\n`;
+    } else if (pair.length === 1) {
+      // For single person (no partner)
+      html += `  <p>Solo: ${pair[0].name}</p>\n`;
+    }
   });
   
-  return csv;
+  // Close HTML tags
+  html += `</body>\n</html>`;
+  
+  return html;
 };
 
-// Helper function to download CSV
-const downloadCSV = (pairs: Person[][]): void => {
-  const csvContent = convertToCSV(pairs);
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+// Helper function to download HTML
+const downloadHTML = (pairs: Person[][]): void => {
+  const htmlContent = convertToHTML(pairs);
+  const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', 'person_pairs.csv');
+  link.setAttribute('download', 'person_pairs.html');
   link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();
@@ -56,23 +90,6 @@ export default function PairingSection({
   pairsGenerated,
   onGeneratePairs,
 }: PairingSectionProps) {
-  // Define gradient classes for different pairs
-  const gradientClasses = [
-    'from-blue-50 to-indigo-50',
-    'from-purple-50 to-pink-50',
-    'from-teal-50 to-cyan-50',
-    'from-amber-50 to-orange-50',
-    'from-emerald-50 to-lime-50'
-  ];
-  
-  const iconBgClasses = [
-    ['bg-blue-100 text-blue-600', 'bg-indigo-100 text-indigo-600'],
-    ['bg-purple-100 text-purple-600', 'bg-pink-100 text-pink-600'],
-    ['bg-teal-100 text-teal-600', 'bg-cyan-100 text-cyan-600'],
-    ['bg-amber-100 text-amber-600', 'bg-orange-100 text-orange-600'],
-    ['bg-emerald-100 text-emerald-600', 'bg-lime-100 text-lime-600']
-  ];
-
   return (
     <section className="bg-white rounded-lg shadow-md p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -93,12 +110,12 @@ export default function PairingSection({
           
           {pairsGenerated && (
             <Button
-              onClick={() => downloadCSV(pairs)}
+              onClick={() => downloadHTML(pairs)}
               variant="outline"
               className="border-gray-300 text-gray-700 hover:bg-gray-100"
             >
-              <DownloadCloud className="h-4 w-4 mr-2" />
-              Export CSV
+              <Download className="h-4 w-4 mr-2" />
+              Export HTML
             </Button>
           )}
         </div>
@@ -117,51 +134,26 @@ export default function PairingSection({
         </div>
       )}
 
-      {/* Generated Pairs */}
+      {/* Pairs Generated Confirmation */}
       {pairsGenerated && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {pairs.map((pair, index) => (
-            <div 
-              key={index}
-              className={`border border-gray-200 rounded-lg p-4 bg-gradient-to-r ${gradientClasses[index % gradientClasses.length]}`}
-            >
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-gray-800">
-                  {pair.length === 1 ? 'Individual' : `Pair ${index + 1}`}
-                </h3>
-                <span className={`${pair.length === 1 ? 'bg-amber-500/10 text-amber-600' : 'bg-blue-500/10 text-blue-600'} text-xs px-2 py-1 rounded-full flex items-center gap-1`}>
-                  {pair.length === 1 ? (
-                    <>
-                      <UserCircle2 className="h-3 w-3" />
-                      Solo
-                    </>
-                  ) : (
-                    <>
-                      <Users2 className="h-3 w-3" />
-                      Team
-                    </>
-                  )}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                {pair.map((person, nameIndex) => (
-                  <div key={`${person.name}-${nameIndex}`} className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full ${iconBgClasses[index % iconBgClasses.length][nameIndex % 2]} flex items-center justify-center`}>
-                      <UserCircle2 className="h-4 w-4" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-gray-800">{person.name}</span>
-                      {person.url && (
-                        <a href={person.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline truncate max-w-[200px]">
-                          {person.url}
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg bg-green-50">
+          <div className="text-gray-400 mb-2 text-green-500">
+            <Users2 className="h-12 w-12 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-700 mb-1">
+            Pairs generated successfully!
+          </h3>
+          <p className="text-gray-600 text-sm mb-4">
+            {pairs.length} pairs have been created. Click the "Export HTML" button to download.
+          </p>
+          <Button
+            onClick={() => downloadHTML(pairs)}
+            variant="default"
+            className="bg-green-600 text-white hover:bg-green-700"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Download HTML
+          </Button>
         </div>
       )}
     </section>
