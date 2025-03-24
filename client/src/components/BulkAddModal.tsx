@@ -11,7 +11,7 @@ import {
 import { Person } from "@shared/schema";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UploadCloud, AlertCircle } from "lucide-react";
+import { UploadCloud, AlertCircle, DownloadCloud } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BulkAddModalProps {
@@ -212,6 +212,26 @@ export default function BulkAddModal({
               The URL column is optional. If your CSV doesn't have a header row, 
               the first column will be treated as names and the second as URLs.
             </p>
+            <div className="mt-3 flex justify-center">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const csvContent = "Name,URL\nJohn Smith,https://example.com/john\nJane Doe,https://linkedin.com/in/jane\nMichael Johnson,\nSarah Williams,https://github.com/sarah\nRobert Brown,https://twitter.com/robert";
+                  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', 'name-pairs-template.csv');
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1 underline"
+              >
+                <DownloadCloud className="h-3 w-3" /> 
+                Download sample CSV template
+              </button>
+            </div>
           </div>
         </div>
         
