@@ -156,10 +156,10 @@ export default function BulkAddModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className="sm:max-w-xl bg-gray-800 text-gray-100 border-gray-700">
         <DialogHeader>
-          <DialogTitle>Import Names & URLs</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-gray-100">Import Names & URLs</DialogTitle>
+          <DialogDescription className="text-gray-300">
             Upload a CSV file containing names and URLs.
           </DialogDescription>
         </DialogHeader>
@@ -174,7 +174,7 @@ export default function BulkAddModal({
           
           <div 
             className={`border-2 border-dashed rounded-lg p-8 text-center ${
-              isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+              isDragging ? 'border-blue-500 bg-gray-700' : 'border-gray-600'
             } transition-colors duration-200 cursor-pointer`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -190,10 +190,10 @@ export default function BulkAddModal({
             />
             
             <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <h3 className="mt-2 text-sm font-medium text-gray-200">
               {csvFile ? csvFile.name : "Drag and drop your CSV file here"}
             </h3>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-400">
               {csvFile 
                 ? `${parsedData.length} entries found` 
                 : "Or click to browse (CSV format only)"}
@@ -201,14 +201,14 @@ export default function BulkAddModal({
           </div>
           
           <div className="text-sm">
-            <h4 className="font-medium mb-1">CSV Format</h4>
-            <p className="text-gray-600 mb-2">Your CSV file should have the following format:</p>
-            <div className="bg-gray-100 p-2 rounded text-xs font-mono">
+            <h4 className="font-medium mb-1 text-gray-200">CSV Format</h4>
+            <p className="text-gray-300 mb-2">Your CSV file should have the following format:</p>
+            <div className="bg-gray-700 p-2 rounded text-xs font-mono text-gray-200 border border-gray-600">
               Name,URL<br />
               John Smith,https://example.com/john<br />
               Jane Doe,https://linkedin.com/in/jane
             </div>
-            <p className="mt-2 text-gray-600 text-xs">
+            <p className="mt-2 text-gray-400 text-xs">
               The URL column is optional. If your CSV doesn't have a header row, 
               the first column will be treated as names and the second as URLs.
             </p>
@@ -226,7 +226,7 @@ export default function BulkAddModal({
                   link.click();
                   document.body.removeChild(link);
                 }}
-                className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-1 underline"
+                className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 underline"
               >
                 <DownloadCloud className="h-3 w-3" /> 
                 Download sample CSV template
@@ -236,7 +236,7 @@ export default function BulkAddModal({
         </div>
         
         <DialogFooter className="flex justify-end gap-3">
-          <Button variant="outline" onClick={handleClose}>
+          <Button variant="outline" onClick={handleClose} className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600">
             Cancel
           </Button>
           <Button 

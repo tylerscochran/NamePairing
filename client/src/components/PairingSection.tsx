@@ -19,16 +19,18 @@ const convertToHTML = (pairs: Person[][]): string => {
       margin: 0 auto;
       padding: 20px;
       line-height: 1.6;
+      background-color: #1f2937;
+      color: #e5e7eb;
     }
     h1 {
-      color: #2563eb;
+      color: #60a5fa;
       margin-bottom: 20px;
     }
     p {
       margin: 12px 0;
     }
     a {
-      color: #2563eb;
+      color: #60a5fa;
       text-decoration: none;
     }
     a:hover {
@@ -89,11 +91,11 @@ export default function PairingSection({
   onGeneratePairs,
 }: PairingSectionProps) {
   return (
-    <section className="bg-white rounded-lg shadow-md p-6">
+    <section className="bg-gray-800 rounded-lg shadow-md p-6 border border-gray-700">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-          <h2 className="text-xl font-medium text-gray-800">Generated Pairs</h2>
-          <p className="text-gray-600 text-sm">Names and URLs will be randomly paired when you generate</p>
+          <h2 className="text-xl font-medium text-gray-100">Generated Pairs</h2>
+          <p className="text-gray-300 text-sm">Names and URLs will be randomly paired when you generate</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -110,7 +112,7 @@ export default function PairingSection({
             <Button
               onClick={() => downloadHTML(pairs)}
               variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              className="border-gray-600 text-gray-200 hover:bg-gray-700 bg-gray-800"
             >
               <Download className="h-4 w-4 mr-2" />
               Export HTML
@@ -121,12 +123,12 @@ export default function PairingSection({
 
       {/* Initial State - No Pairs */}
       {!pairsGenerated && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
+        <div className="text-center py-12 border-2 border-dashed border-gray-600 rounded-lg">
           <div className="text-gray-400 mb-2">
-            <Users2 className="h-12 w-12 mx-auto text-gray-300" />
+            <Users2 className="h-12 w-12 mx-auto text-gray-500" />
           </div>
-          <h3 className="text-lg font-medium text-gray-600 mb-1">No pairs generated yet</h3>
-          <p className="text-gray-500 text-sm">
+          <h3 className="text-lg font-medium text-gray-300 mb-1">No pairs generated yet</h3>
+          <p className="text-gray-400 text-sm">
             Import data above and click "Generate Pairs" to create random pairs
           </p>
         </div>
@@ -134,14 +136,14 @@ export default function PairingSection({
 
       {/* Pairs Generated Confirmation */}
       {pairsGenerated && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg bg-green-50">
-          <div className="text-gray-400 mb-2 text-green-500">
-            <Users2 className="h-12 w-12 mx-auto" />
+        <div className="text-center py-12 border-2 border-dashed border-gray-600 rounded-lg bg-gray-700">
+          <div className="text-gray-300 mb-2 text-green-400">
+            <Users2 className="h-12 w-12 mx-auto text-green-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-700 mb-1">
+          <h3 className="text-lg font-medium text-gray-200 mb-1">
             Pairs generated successfully!
           </h3>
-          <p className="text-gray-600 text-sm mb-4">
+          <p className="text-gray-300 text-sm mb-4">
             {pairs.length} pairs have been created. Click the "Export HTML" button to download.
           </p>
           <Button
