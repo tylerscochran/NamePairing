@@ -1,22 +1,27 @@
 import { Button } from "@/components/ui/button";
+import { Person } from "@shared/schema";
 
 // Helper function to convert pairs to CSV format
-const convertToCSV = (pairs: string[][]): string => {
+const convertToCSV = (pairs: Person[][]): string => {
   const csvRows = [];
   
   // Add header row
-  csvRows.push('Pair Number,Names');
+  csvRows.push('Pair Number,Names,URLs');
   
   // Add data rows
   pairs.forEach((pair, index) => {
-    csvRows.push(`${index + 1},"${pair.join(', ')}"`);
+    // Collect names and URLs from pair
+    const names = pair.map(person => person.name).join(', ');
+    const urls = pair.map(person => person.url || '').join(', ');
+    
+    csvRows.push(`${index + 1},"${names}","${urls}"`);
   });
   
   return csvRows.join('\n');
 };
 
 // Helper function to download CSV
-const downloadCSV = (pairs: string[][]): void => {
+const downloadCSV = (pairs: Person[][]): void => {
   const csvContent = convertToCSV(pairs);
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -30,14 +35,14 @@ const downloadCSV = (pairs: string[][]): void => {
 };
 
 interface PairingSectionProps {
-  names: string[];
-  pairs: string[][];
+  persons: Person[];
+  pairs: Person[][];
   pairsGenerated: boolean;
   onGeneratePairs: () => void;
 }
 
 export default function PairingSection({
-  names,
+  persons,
   pairs,
   pairsGenerated,
   onGeneratePairs,
@@ -71,7 +76,7 @@ export default function PairingSection({
             onClick={onGeneratePairs}
             variant="default"
             className="bg-blue-600 text-white hover:bg-blue-700"
-            disabled={names.length === 0}
+            disabled={persons.length === 0}
           >
             <i className="fas fa-random mr-2"></i>
             {pairsGenerated ? "Regenerate Pairs" : "Generate Pairs"}
@@ -120,12 +125,19 @@ export default function PairingSection({
                 </span>
               </div>
               <div className="flex flex-col gap-2">
-                {pair.map((name, nameIndex) => (
-                  <div key={`${name}-${nameIndex}`} className="flex items-center gap-3">
+                {pair.map((person, nameIndex) => (
+                  <div key={`${person.name}-${nameIndex}`} className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-full ${iconBgClasses[index % iconBgClasses.length][nameIndex % 2]} flex items-center justify-center`}>
                       <i className="fas fa-user"></i>
                     </div>
-                    <span className="text-gray-800">{name}</span>
+                    <div className="flex flex-col">
+                      <span className="text-gray-800">{person.name}</span>
+                      {person.url && (
+                        <a href={person.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline truncate max-w-[200px]">
+                          {person.url}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

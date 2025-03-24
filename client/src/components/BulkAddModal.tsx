@@ -10,24 +10,30 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { parseBulkInput } from "@/lib/utils";
+import { Person } from "@shared/schema";
 
 interface BulkAddModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddNames: (names: string[]) => void;
+  onAddPersons: (persons: Person[]) => void;
 }
 
 export default function BulkAddModal({
   isOpen,
   onClose,
-  onAddNames,
+  onAddPersons,
 }: BulkAddModalProps) {
-  const [bulkNames, setBulkNames] = useState("");
-
+  const [bulkInput, setBulkInput] = useState("");
+  
   const handleSubmit = () => {
-    const parsedNames = parseBulkInput(bulkNames);
-    onAddNames(parsedNames);
-    setBulkNames("");
+    const parsedNames = parseBulkInput(bulkInput);
+    // Convert names to Person objects
+    const persons: Person[] = parsedNames.map(name => ({
+      name: name.trim(),
+      url: undefined
+    }));
+    onAddPersons(persons);
+    setBulkInput("");
     onClose();
   };
 
@@ -38,12 +44,13 @@ export default function BulkAddModal({
           <DialogTitle>Bulk Add Names</DialogTitle>
           <DialogDescription>
             Enter multiple names, one per line or separated by commas.
+            URLs can be added later individually.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
           <Textarea
-            value={bulkNames}
-            onChange={(e) => setBulkNames(e.target.value)}
+            value={bulkInput}
+            onChange={(e) => setBulkInput(e.target.value)}
             placeholder="John Smith&#10;Jane Doe&#10;Mike Johnson"
             className="min-h-40"
           />
@@ -52,7 +59,10 @@ export default function BulkAddModal({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button 
+            onClick={handleSubmit}
+            className="bg-blue-600 text-white hover:bg-blue-700"
+          >
             Add Names
           </Button>
         </DialogFooter>

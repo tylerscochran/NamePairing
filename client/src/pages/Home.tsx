@@ -5,16 +5,18 @@ import InfoSection from "@/components/InfoSection";
 import BulkAddModal from "@/components/BulkAddModal";
 import { useToast } from "@/hooks/use-toast";
 import { generatePairs } from "@/lib/utils";
+import { Person } from "@shared/schema";
 
 export default function Home() {
-  const [names, setNames] = useState<string[]>([]);
-  const [pairs, setPairs] = useState<string[][]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
+  const [pairs, setPairs] = useState<Person[][]>([]);
   const [pairsGenerated, setPairsGenerated] = useState(false);
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const addName = (name: string) => {
-    if (names.includes(name)) {
+  const addPerson = (person: Person): boolean => {
+    // Check if a person with the same name already exists
+    if (persons.some(p => p.name === person.name)) {
       toast({
         title: "Name already exists",
         description: "This name is already in the list",
@@ -23,22 +25,22 @@ export default function Home() {
       return false;
     }
     
-    setNames((prevNames) => [...prevNames, name]);
+    setPersons((prevPersons) => [...prevPersons, person]);
     toast({
-      title: "Name added",
-      description: "Name added successfully",
+      title: "Person added",
+      description: "Person added successfully",
     });
     return true;
   };
 
-  const removeName = (nameToRemove: string) => {
-    setNames((prevNames) => prevNames.filter((name) => name !== nameToRemove));
+  const removePerson = (person: Person) => {
+    setPersons((prevPersons) => prevPersons.filter((p) => p.name !== person.name));
     
     if (pairsGenerated) {
-      // Regenerate pairs if we're removing a name and pairs are already generated
-      const newNames = names.filter((name) => name !== nameToRemove);
-      if (newNames.length > 0) {
-        const newPairs = generatePairs(newNames);
+      // Regenerate pairs if we're removing a person and pairs are already generated
+      const newPersons = persons.filter((p) => p.name !== person.name);
+      if (newPersons.length > 0) {
+        const newPairs = generatePairs(newPersons);
         setPairs(newPairs);
       } else {
         setPairs([]);
@@ -47,27 +49,27 @@ export default function Home() {
     }
   };
 
-  const clearNames = () => {
-    setNames([]);
+  const clearPersons = () => {
+    setPersons([]);
     setPairs([]);
     setPairsGenerated(false);
     toast({
-      title: "All names cleared",
-      description: "Name list has been cleared",
+      title: "All entries cleared",
+      description: "Person list has been cleared",
     });
   };
 
   const handleGeneratePairs = () => {
-    if (names.length === 0) {
+    if (persons.length === 0) {
       toast({
-        title: "No names",
-        description: "Please add at least one name first",
+        title: "No entries",
+        description: "Please add at least one person first",
         variant: "destructive",
       });
       return;
     }
 
-    const newPairs = generatePairs(names);
+    const newPairs = generatePairs(persons);
     setPairs(newPairs);
     setPairsGenerated(true);
     toast({
@@ -76,19 +78,20 @@ export default function Home() {
     });
   };
 
-  const handleBulkAdd = (bulkNames: string[]) => {
-    if (bulkNames.length === 0) {
+  const handleBulkAdd = (persons: Person[]) => {
+    if (persons.length === 0) {
       toast({
-        title: "No valid names",
-        description: "No valid names found in the input",
+        title: "No valid entries",
+        description: "No valid persons found in the input",
         variant: "destructive",
       });
       return;
     }
 
     let addedCount = 0;
-    const uniqueNames = bulkNames.filter(name => {
-      if (!names.includes(name)) {
+    const existingNames = persons.map(p => p.name);
+    const uniquePersons = persons.filter(person => {
+      if (!persons.some(p => p.name === person.name)) {
         addedCount++;
         return true;
       }
@@ -96,22 +99,22 @@ export default function Home() {
     });
 
     if (addedCount > 0) {
-      setNames((prevNames) => [...prevNames, ...uniqueNames]);
+      setPersons((prevPersons) => [...prevPersons, ...uniquePersons]);
       
       if (pairsGenerated) {
-        // Regenerate pairs if we're adding names and pairs are already generated
-        const newPairs = generatePairs([...names, ...uniqueNames]);
+        // Regenerate pairs if we're adding persons and pairs are already generated
+        const newPairs = generatePairs([...persons, ...uniquePersons]);
         setPairs(newPairs);
       }
       
       toast({
-        title: "Names added",
-        description: `${addedCount} name${addedCount !== 1 ? 's' : ''} added successfully`,
+        title: "Entries added",
+        description: `${addedCount} person${addedCount !== 1 ? 's' : ''} added successfully`,
       });
     } else {
       toast({
-        title: "No new names",
-        description: "No new names added - all were duplicates",
+        title: "No new entries",
+        description: "No new entries added - all were duplicates",
         variant: "destructive",
       });
     }
@@ -132,15 +135,15 @@ export default function Home() {
         {/* Main Content */}
         <main className="flex flex-col gap-8">
           <NameInput 
-            names={names} 
-            onAddName={addName} 
-            onRemoveName={removeName} 
-            onClearNames={clearNames}
+            persons={persons} 
+            onAddPerson={addPerson} 
+            onRemovePerson={removePerson} 
+            onClearPersons={clearPersons}
             onBulkAdd={() => setIsBulkModalOpen(true)}
           />
           
           <PairingSection 
-            names={names}
+            persons={persons}
             pairs={pairs}
             pairsGenerated={pairsGenerated}
             onGeneratePairs={handleGeneratePairs}
@@ -159,7 +162,7 @@ export default function Home() {
       <BulkAddModal 
         isOpen={isBulkModalOpen} 
         onClose={() => setIsBulkModalOpen(false)}
-        onAddNames={handleBulkAdd}
+        onAddPersons={handleBulkAdd}
       />
     </div>
   );
