@@ -49,8 +49,8 @@ const convertToHTML = (pairs: Person[][]): string => {
       const pairedWith = pair[1];
       const url = pairedWith.url || "#"; // Use the paired person's URL
       
-      // Create the HTML entry in the format: <p><a href="[URL of pairedWith]" alt="[Name of pairedWith]">[Name of person]</a></p>
-      html += `  <p><a href="${url}" alt="${pairedWith.name}">${person.name}</a></p>\n`;
+      // Create the HTML entry with accessibility attributes
+      html += `  <p><a href="${url}" aria-label="${person.name} paired with ${pairedWith.name}">${person.name}</a></p>\n`;
     } else if (pair.length === 1) {
       // For single person (no partner)
       html += `  <p>Solo: ${pair[0].name}</p>\n`;
@@ -103,8 +103,9 @@ export default function PairingSection({
             variant="default"
             className="bg-blue-600 text-white hover:bg-blue-700"
             disabled={persons.length === 0}
+            aria-label={pairsGenerated ? "Regenerate random pairs" : "Generate random pairs"}
           >
-            <Shuffle className="h-4 w-4 mr-2" />
+            <Shuffle className="h-4 w-4 mr-2" aria-hidden="true" />
             {pairsGenerated ? "Regenerate Pairs" : "Generate Pairs"}
           </Button>
           
@@ -113,8 +114,9 @@ export default function PairingSection({
               onClick={() => downloadHTML(pairs)}
               variant="outline"
               className="border-gray-600 text-gray-200 hover:bg-gray-700 bg-gray-800"
+              aria-label="Export generated pairs as HTML file"
             >
-              <Download className="h-4 w-4 mr-2" />
+              <Download className="h-4 w-4 mr-2" aria-hidden="true" />
               Export HTML
             </Button>
           )}
@@ -125,7 +127,7 @@ export default function PairingSection({
       {!pairsGenerated && (
         <div className="text-center py-12 border-2 border-dashed border-gray-600 rounded-lg">
           <div className="text-gray-400 mb-2">
-            <Users2 className="h-12 w-12 mx-auto text-gray-500" />
+            <Users2 className="h-12 w-12 mx-auto text-gray-500" aria-hidden="true" />
           </div>
           <h3 className="text-lg font-medium text-gray-300 mb-1">No pairs generated yet</h3>
           <p className="text-gray-400 text-sm">
@@ -136,9 +138,14 @@ export default function PairingSection({
 
       {/* Pairs Generated Confirmation */}
       {pairsGenerated && (
-        <div className="text-center py-12 border-2 border-dashed border-gray-600 rounded-lg bg-gray-700">
+        <div 
+          className="text-center py-12 border-2 border-dashed border-gray-600 rounded-lg bg-gray-700"
+          role="region"
+          aria-live="polite"
+          aria-label="Pairing results"
+        >
           <div className="text-gray-300 mb-2 text-green-400">
-            <Users2 className="h-12 w-12 mx-auto text-green-400" />
+            <Users2 className="h-12 w-12 mx-auto text-green-400" aria-hidden="true" />
           </div>
           <h3 className="text-lg font-medium text-gray-200 mb-1">
             Pairs generated successfully!
@@ -150,8 +157,9 @@ export default function PairingSection({
             onClick={() => downloadHTML(pairs)}
             variant="default"
             className="bg-green-600 text-white hover:bg-green-700"
+            aria-label="Download generated pairs as HTML file"
           >
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="h-4 w-4 mr-2" aria-hidden="true" />
             Download HTML
           </Button>
         </div>

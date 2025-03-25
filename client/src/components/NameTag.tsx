@@ -15,9 +15,10 @@ export default function NameTag({ name, url, onRemove }: NameTagProps) {
           target="_blank" 
           rel="noopener noreferrer" 
           className="text-blue-600 hover:text-blue-800 hover:underline flex items-center"
+          aria-label={`Visit ${name}'s profile`}
         >
           <span>{name}</span>
-          <i className="fas fa-external-link-alt text-xs ml-1"></i>
+          <i className="fas fa-external-link-alt text-xs ml-1" aria-hidden="true"></i>
         </a>
       ) : (
         <span className="text-gray-800">{name}</span>
@@ -26,8 +27,10 @@ export default function NameTag({ name, url, onRemove }: NameTagProps) {
         type="button"
         onClick={onRemove}
         className="text-gray-500 hover:text-red-500 transition-colors"
+        aria-label={`Remove ${name}`}
       >
-        <i className="fas fa-times"></i>
+        <i className="fas fa-times" aria-hidden="true"></i>
+        <span className="sr-only">Remove</span>
       </button>
     </div>
   );

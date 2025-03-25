@@ -177,6 +177,16 @@ export default function NameInput({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            // Trigger click when Enter or Space is pressed
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Import CSV file. Click or press Enter to browse for files, or drag and drop a file here."
         >
           <input
             type="file"
@@ -184,9 +194,10 @@ export default function NameInput({
             onChange={handleFileInput}
             accept=".csv"
             className="hidden"
+            aria-hidden="true"
           />
           <div className="text-gray-400 mb-2">
-            <Upload className="h-12 w-12 mx-auto text-gray-500" />
+            <Upload className="h-12 w-12 mx-auto text-gray-500" aria-hidden="true" />
           </div>
           <h3 className="text-lg font-medium text-gray-300 mb-1">No data imported yet</h3>
           <p className="text-gray-400 text-sm max-w-md mx-auto mb-3">
@@ -196,8 +207,9 @@ export default function NameInput({
             <button 
               onClick={downloadSampleCSV}
               className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 underline"
+              aria-label="Download sample CSV template"
             >
-              <DownloadCloud className="h-3 w-3" /> 
+              <DownloadCloud className="h-3 w-3" aria-hidden="true" /> 
               Download sample CSV template
             </button>
           </div>
@@ -221,8 +233,9 @@ export default function NameInput({
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               className="bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500"
+              aria-label="Import more names from a CSV file"
             >
-              <Upload className="h-4 w-4 mr-2" />
+              <Upload className="h-4 w-4 mr-2" aria-hidden="true" />
               Import More Names
             </Button>
             <input
@@ -231,6 +244,7 @@ export default function NameInput({
               onChange={handleFileInput}
               accept=".csv"
               className="hidden"
+              aria-hidden="true"
             />
           </div>
         </div>
