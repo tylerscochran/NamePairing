@@ -93,13 +93,13 @@ export default function Home() {
             onRemovePerson={removePerson} 
             onClearPersons={clearPersons}
             onAddPersons={handleBulkAdd}
+            onGeneratePairs={handleGeneratePairs}
           />
           
           <PairingSection 
             persons={persons}
             pairs={pairs}
             pairsGenerated={pairsGenerated}
-            onGeneratePairs={handleGeneratePairs}
           />
         </main>
 

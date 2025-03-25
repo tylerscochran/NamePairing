@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Person } from "@shared/schema";
-import { Upload, Trash2, DownloadCloud, AlertCircle } from "lucide-react";
+import { Upload, Trash2, DownloadCloud, AlertCircle, Shuffle } from "lucide-react";
 
 interface NameInputProps {
   persons: Person[];
   onRemovePerson: (person: Person) => void;
   onClearPersons: () => void;
   onAddPersons: (persons: Person[]) => void;
+  onGeneratePairs: () => void;
 }
 
 export default function NameInput({
@@ -27,6 +28,7 @@ export default function NameInput({
   onRemovePerson,
   onClearPersons,
   onAddPersons,
+  onGeneratePairs,
 }: NameInputProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -237,7 +239,19 @@ export default function NameInput({
           <div className="text-sm text-blue-400 mt-1">
             Ready for pairing
           </div>
-          <div className="mt-4 pt-4 border-t border-gray-600">
+          <div className="mt-4 pt-4 border-t border-gray-600 flex flex-wrap gap-3 justify-center">
+            <Button
+              onClick={onGeneratePairs}
+              variant="default"
+              className="bg-blue-600 text-white hover:bg-blue-700"
+              disabled={persons.length === 0}
+              aria-label="Generate random pairs"
+              type="button"
+            >
+              <Shuffle className="h-4 w-4 mr-2" aria-hidden="true" />
+              Generate Pairs
+            </Button>
+            
             <Button
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
@@ -248,6 +262,45 @@ export default function NameInput({
               <Upload className="h-4 w-4 mr-2" aria-hidden="true" />
               Import More Names
             </Button>
+            
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="text-gray-200 bg-gray-700 hover:bg-gray-600 border-gray-600"
+                  disabled={persons.length === 0}
+                  aria-label="Clear all names"
+                  type="button"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Clear All
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent 
+                className="bg-gray-800 border-gray-700 text-gray-100"
+                role="alertdialog"
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <AlertDialogHeader>
+                  <AlertDialogTitle id="alert-dialog-title" className="text-gray-100">Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription id="alert-dialog-description" className="text-gray-300">
+                    This will clear all entries from your list. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={onClearPersons} 
+                    className="bg-red-600 text-white hover:bg-red-700"
+                    aria-label="Confirm clearing all names from the list"
+                  >
+                    Clear All
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            
             <input
               type="file"
               ref={fileInputRef}
@@ -261,47 +314,10 @@ export default function NameInput({
         </div>
       )}
 
-      {/* Actions */}
+      {/* Helper text */}
       {persons.length > 0 && (
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
-          <div className="text-gray-300">
-            Data imported successfully. Click "Generate Pairs" below to create random pairs.
-          </div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="text-gray-200 bg-gray-700 hover:bg-gray-600 border-gray-600"
-                disabled={persons.length === 0}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear All
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent 
-              className="bg-gray-800 border-gray-700 text-gray-100"
-              role="alertdialog"
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <AlertDialogHeader>
-                <AlertDialogTitle id="alert-dialog-title" className="text-gray-100">Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription id="alert-dialog-description" className="text-gray-300">
-                  This will clear all entries from your list. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600">Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={onClearPersons} 
-                  className="bg-red-600 text-white hover:bg-red-700"
-                  aria-label="Confirm clearing all names from the list"
-                >
-                  Clear All
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        <div className="text-gray-300 text-center mt-4">
+          Click "Generate Pairs" to create random pairs from your imported names.
         </div>
       )}
     </section>

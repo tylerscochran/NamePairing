@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Person } from "@shared/schema";
-import { Download, Shuffle, Users2 } from "lucide-react";
+import { Download, Users2 } from "lucide-react";
 
 // Helper function to convert pairs to HTML format
 const convertToHTML = (pairs: Person[][]): string => {
@@ -128,14 +128,12 @@ interface PairingSectionProps {
   persons: Person[];
   pairs: Person[][];
   pairsGenerated: boolean;
-  onGeneratePairs: () => void;
 }
 
 export default function PairingSection({
   persons,
   pairs,
   pairsGenerated,
-  onGeneratePairs,
 }: PairingSectionProps) {
   return (
     <section 
@@ -148,18 +146,6 @@ export default function PairingSection({
           <p className="text-gray-300 text-sm">Names and URLs will be randomly paired when you generate</p>
         </div>
         <div className="flex gap-3">
-          <Button
-            onClick={onGeneratePairs}
-            variant="default"
-            className="bg-blue-600 text-white hover:bg-blue-700"
-            disabled={persons.length === 0}
-            aria-label={pairsGenerated ? "Regenerate random pairs" : "Generate random pairs"}
-            type="button"
-          >
-            <Shuffle className="h-4 w-4 mr-2" aria-hidden="true" />
-            {pairsGenerated ? "Regenerate Pairs" : "Generate Pairs"}
-          </Button>
-          
           {pairsGenerated && (
             <Button
               onClick={() => downloadHTML(pairs)}
