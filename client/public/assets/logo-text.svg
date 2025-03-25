@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background (transparent) -->
+  <rect width="400" height="100" fill="transparent"/>
+  
+  <!-- "Name" text -->
+  <text x="20" y="65" font-family="Arial, sans-serif" font-weight="700" font-size="42" fill="url(#text-gradient1)">Name</text>
+  
+  <!-- Connecting symbol representing pairing -->
+  <path d="M160 50 L180 60 L200 50 L220 40 L240 50" stroke="url(#connector-gradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- "Pairing" text -->
+  <text x="250" y="65" font-family="Arial, sans-serif" font-weight="700" font-size="42" fill="url(#text-gradient2)">Pairing</text>
+  
+  <!-- "Tool" text, positioned below with smaller size -->
+  <text x="180" y="90" font-family="Arial, sans-serif" font-weight="500" font-size="24" fill="#A1A1AA">Tool</text>
+  
+  <!-- Small decorative elements symbolizing connections -->
+  <circle cx="195" cy="30" r="4" fill="#FBBF24"/>
+  <circle cx="215" cy="30" r="4" fill="#FBBF24"/>
+  
+  <!-- Gradients for the elements -->
+  <defs>
+    <!-- Text gradient for "Name" -->
+    <linearGradient id="text-gradient1" x1="20" y1="40" x2="120" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    
+    <!-- Text gradient for "Pairing" -->
+    <linearGradient id="text-gradient2" x1="240" y1="40" x2="380" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+    
+    <!-- Connector line gradient -->
+    <linearGradient id="connector-gradient" x1="160" y1="50" x2="240" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="50%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+  </defs>
+</svg>

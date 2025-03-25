@@ -80,6 +80,9 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header Section */}
         <header className="text-center mb-8" role="banner">
+          <div className="flex justify-center mb-3">
+            <img src="/assets/logo-abstract.svg" alt="Name Pairing Tool Logo" className="w-16 h-16" />
+          </div>
           <h1 className="text-3xl font-semibold text-gray-100 mb-2">Name Pairing Tool</h1>
           <p className="text-gray-300 max-w-2xl mx-auto">
             A simple utility for randomly pairing people with other people's profile links
