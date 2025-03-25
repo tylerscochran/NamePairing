@@ -80,8 +80,8 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header Section */}
         <header className="text-center mb-8" role="banner">
-          <div className="font-options mb-4">
-            <h1 className="text-5xl md:text-6xl font-fredoka text-gradient mb-2 tracking-wide">
+          <div className="font-options mb-6">
+            <h1 className="text-5xl md:text-6xl font-fredoka text-gradient mb-2 tracking-wide py-2 leading-relaxed">
               Name Pairing Tool
             </h1>
           </div>
