@@ -1,25 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NameInput from "@/components/NameInput";
 import PairingSection from "@/components/PairingSection";
 import { generatePairs } from "@/lib/utils";
-import { Person } from "@shared/schema";
+import { Person } from "@/lib/schema";
+import * as localStorageService from "@/lib/localStorage";
 
 export default function Home() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [pairs, setPairs] = useState<Person[][]>([]);
   const [pairsGenerated, setPairsGenerated] = useState(false);
 
-  const addPerson = (person: Person): boolean => {
-    // Check if a person with the same name already exists
-    if (persons.some(p => p.name === person.name)) {
-      return false;
+  // Load data from localStorage on initial render
+  useEffect(() => {
+    const storedPersons = localStorageService.getPersons();
+    if (storedPersons.length > 0) {
+      setPersons(storedPersons);
     }
-    
-    setPersons((prevPersons) => [...prevPersons, person]);
-    return true;
+  }, []);
+
+  const addPerson = (person: Person): boolean => {
+    const success = localStorageService.addPerson(person);
+    if (success) {
+      setPersons((prevPersons) => [...prevPersons, person]);
+    }
+    return success;
   };
 
   const removePerson = (person: Person) => {
+    localStorageService.removePerson(person);
     setPersons((prevPersons) => prevPersons.filter((p) => p.name !== person.name));
     
     if (pairsGenerated) {
@@ -36,6 +44,7 @@ export default function Home() {
   };
 
   const clearPersons = () => {
+    localStorageService.clearPersons();
     setPersons([]);
     setPairs([]);
     setPairsGenerated(false);
@@ -56,14 +65,15 @@ export default function Home() {
       return;
     }
 
-    // Filter out duplicates comparing with existing persons list
-    const uniquePersons = newPersons.filter(newPerson => 
-      !persons.some(existingPerson => existingPerson.name === newPerson.name)
-    );
+    // Save to localStorage and get count of added persons
+    const addedCount = localStorageService.addPersons(newPersons);
     
-    const addedCount = uniquePersons.length;
-
     if (addedCount > 0) {
+      // Filter out duplicates comparing with existing persons list
+      const uniquePersons = newPersons.filter(newPerson => 
+        !persons.some(existingPerson => existingPerson.name === newPerson.name)
+      );
+      
       setPersons((prevPersons) => [...prevPersons, ...uniquePersons]);
       
       if (pairsGenerated) {
