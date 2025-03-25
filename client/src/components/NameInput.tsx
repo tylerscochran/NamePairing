@@ -186,7 +186,9 @@ export default function NameInput({
           }}
           role="button"
           tabIndex={0}
-          aria-label="Import CSV file. Click or press Enter to browse for files, or drag and drop a file here."
+          aria-label="Import CSV file"
+          aria-describedby="csv-import-description"
+          data-state={isDragging ? 'dragging' : 'idle'}
         >
           <input
             type="file"
@@ -195,12 +197,13 @@ export default function NameInput({
             accept=".csv"
             className="hidden"
             aria-hidden="true"
+            id="csv-file-input"
           />
           <div className="text-gray-400 mb-2">
             <Upload className="h-12 w-12 mx-auto text-gray-500" aria-hidden="true" />
           </div>
-          <h3 className="text-lg font-medium text-gray-300 mb-1">No data imported yet</h3>
-          <p className="text-gray-400 text-sm max-w-md mx-auto mb-3">
+          <h3 className="text-lg font-medium text-gray-300 mb-1" id="csv-import-heading">No data imported yet</h3>
+          <p className="text-gray-400 text-sm max-w-md mx-auto mb-3" id="csv-import-description">
             Drag and drop a CSV file here, or click to browse
           </p>
           <div className="flex justify-center">
@@ -208,6 +211,7 @@ export default function NameInput({
               onClick={downloadSampleCSV}
               className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 underline"
               aria-label="Download sample CSV template"
+              type="button"
             >
               <DownloadCloud className="h-3 w-3" aria-hidden="true" /> 
               Download sample CSV template
@@ -218,11 +222,16 @@ export default function NameInput({
 
       {/* Summary Display */}
       {persons.length > 0 && (
-        <div className="py-8 px-6 rounded-lg bg-gray-700 border border-gray-600 text-center mb-4">
-          <div className="text-4xl font-bold text-blue-400 mb-2">
+        <div 
+          className="py-8 px-6 rounded-lg bg-gray-700 border border-gray-600 text-center mb-4"
+          role="region"
+          aria-labelledby="import-summary-heading"
+          aria-live="polite"
+        >
+          <div className="text-4xl font-bold text-blue-400 mb-2" aria-live="polite">
             {persons.length}
           </div>
-          <div className="text-lg text-blue-300">
+          <div className="text-lg text-blue-300" id="import-summary-heading">
             {persons.length === 1 ? 'Name' : 'Names'} Imported
           </div>
           <div className="text-sm text-blue-400 mt-1">
@@ -234,6 +243,7 @@ export default function NameInput({
               variant="outline"
               className="bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500"
               aria-label="Import more names from a CSV file"
+              type="button"
             >
               <Upload className="h-4 w-4 mr-2" aria-hidden="true" />
               Import More Names
@@ -245,6 +255,7 @@ export default function NameInput({
               accept=".csv"
               className="hidden"
               aria-hidden="true"
+              id="csv-file-input-more"
             />
           </div>
         </div>
@@ -267,16 +278,25 @@ export default function NameInput({
                 Clear All
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-gray-800 border-gray-700 text-gray-100">
+            <AlertDialogContent 
+              className="bg-gray-800 border-gray-700 text-gray-100"
+              role="alertdialog"
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-gray-100">Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription className="text-gray-300">
+                <AlertDialogTitle id="alert-dialog-title" className="text-gray-100">Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription id="alert-dialog-description" className="text-gray-300">
                   This will clear all entries from your list. This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel className="bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={onClearPersons} className="bg-red-600 text-white hover:bg-red-700">
+                <AlertDialogAction 
+                  onClick={onClearPersons} 
+                  className="bg-red-600 text-white hover:bg-red-700"
+                  aria-label="Confirm clearing all names from the list"
+                >
                   Clear All
                 </AlertDialogAction>
               </AlertDialogFooter>
