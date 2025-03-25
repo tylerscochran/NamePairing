@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#1E293B"/>
+  
+  <!-- Puzzle Pieces Icon - centered -->
+  <g transform="translate(32, 32) scale(1.2)">
+    <!-- First puzzle piece (left) -->
+    <path d="M-10,0 h8 a4,4 0 0 1 8,0 a4,4 0 0 1 8,0 h4 v-10 h-28 z" fill="#2563EB" stroke="#A1A1AA" stroke-width="0.5" opacity="0.9"/>
+    
+    <!-- Second puzzle piece (right) -->
+    <path d="M18,0 h4 v10 h-28 v-10 h8 a4,4 0 0 1 8,0 a4,4 0 0 1 8,0" fill="#60A5FA" stroke="#A1A1AA" stroke-width="0.5" opacity="0.9"/>
+    
+    <!-- Decorative elements -->
+    <circle cx="4" cy="-5" r="2" fill="#FBBF24" opacity="0.9"/>
+    <circle cx="4" cy="5" r="2" fill="#FBBF24" opacity="0.9"/>
+    
+    <!-- Highlight effect -->
+    <path d="M-8,-1 h8 a4,4 0 0 1 4,0" stroke="white" stroke-width="0.5" opacity="0.6"/>
+    <path d="M16,-1 h-8 a4,4 0 0 1 -4,0" stroke="white" stroke-width="0.5" opacity="0.6"/>
+  </g>
+</svg>

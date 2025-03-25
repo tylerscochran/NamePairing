@@ -110,8 +110,8 @@ export default function Home() {
         <section className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
           <h2 className="text-xl font-semibold text-gray-100 mb-4 text-center">Logo Options</h2>
           
-          <div className="grid grid-cols-1 gap-8">
-            {/* Option 1: Abstract Logo */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Original Options */}
             <div className="bg-gray-900 p-6 rounded-lg">
               <h3 className="text-lg font-medium text-blue-400 mb-3">Option 1: Abstract Logo</h3>
               <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
@@ -123,7 +123,6 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Option 2: Text Logo (Original) */}
             <div className="bg-gray-900 p-6 rounded-lg">
               <h3 className="text-lg font-medium text-blue-400 mb-3">Option 2: Text Logo (Original)</h3>
               <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
@@ -134,26 +133,73 @@ export default function Home() {
                 connected by a flowing line that represents the pairing process.
               </p>
             </div>
-            
+          </div>
+          
+          <h3 className="text-xl font-semibold text-gray-100 mt-8 mb-4 text-center">New Options</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Option 3: Improved Text Logo with Enhanced Icon */}
-            <div className="bg-gray-900 p-6 rounded-lg border-2 border-blue-500">
-              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 3: Improved Text Logo</h3>
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 3: Connected Nodes</h3>
               <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
                 <img src="/assets/logo-text-improved.svg" alt="Improved Text Logo" className="w-64" />
               </div>
               <p className="text-gray-300 text-sm">
-                An enhanced version with a more detailed icon element featuring two connected nodes with decorative 
-                elements and pulsing rings. The "Tool" text is added below for completeness.
+                Two connected nodes with curved paths, decorative dots, and pulsing rings to represent pairing.
               </p>
-              <div className="mt-4 bg-gray-700 p-3 rounded-lg">
-                <h4 className="text-sm font-medium text-amber-300 mb-2">Icon Detail:</h4>
-                <div className="flex justify-center p-2 bg-gray-800 rounded-lg mb-2">
-                  <img src="/favicon.svg" alt="Icon Detail" className="w-16 h-16" />
+              <div className="mt-2 bg-gray-700 p-2 rounded-lg">
+                <div className="flex justify-center p-2 bg-gray-800 rounded-lg">
+                  <img src="/favicon.svg" alt="Icon Detail" className="w-12 h-12" />
                 </div>
-                <p className="text-gray-300 text-xs">
-                  The icon uses connected nodes with curved paths, decorative dots, and pulsing rings to 
-                  represent the pairing concept. This icon is also used as the favicon.
-                </p>
+              </div>
+            </div>
+            
+            {/* Option 4: Network Nodes Icon */}
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 4: Network Hub</h3>
+              <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
+                <img src="/assets/logo-text-option4.svg" alt="Network Nodes Logo" className="w-64" />
+              </div>
+              <p className="text-gray-300 text-sm">
+                A central hub connected to multiple satellite nodes in different colors, emphasizing the 
+                concept of one-to-many connections.
+              </p>
+              <div className="mt-2 bg-gray-700 p-2 rounded-lg">
+                <div className="flex justify-center p-2 bg-gray-800 rounded-lg">
+                  <img src="/assets/favicon-option4.svg" alt="Icon Detail" className="w-12 h-12" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Option 5: Puzzle Pieces Icon */}
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 5: Puzzle Pieces</h3>
+              <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
+                <img src="/assets/logo-text-option5.svg" alt="Puzzle Pieces Logo" className="w-64" />
+              </div>
+              <p className="text-gray-300 text-sm">
+                Interlocking puzzle pieces in complementary colors, representing a perfect fit between pairs.
+              </p>
+              <div className="mt-2 bg-gray-700 p-2 rounded-lg">
+                <div className="flex justify-center p-2 bg-gray-800 rounded-lg">
+                  <img src="/assets/favicon-option5.svg" alt="Icon Detail" className="w-12 h-12" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Option 6: DNA Helix Icon */}
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 6: DNA Helix</h3>
+              <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
+                <img src="/assets/logo-text-option6.svg" alt="DNA Helix Logo" className="w-64" />
+              </div>
+              <p className="text-gray-300 text-sm">
+                A DNA-inspired double helix design with connecting rungs, symbolizing the fundamental concept of pairing.
+              </p>
+              <div className="mt-2 bg-gray-700 p-2 rounded-lg">
+                <div className="flex justify-center p-2 bg-gray-800 rounded-lg">
+                  <img src="/assets/favicon-option6.svg" alt="Icon Detail" className="w-12 h-12" />
+                </div>
               </div>
             </div>
           </div>

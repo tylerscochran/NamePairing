@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background (transparent) -->
+  <rect width="400" height="100" fill="transparent"/>
+  
+  <!-- "Name" text -->
+  <text x="20" y="65" font-family="Arial, sans-serif" font-weight="700" font-size="42" fill="url(#text-gradient1)">Name</text>
+  
+  <!-- Option 5: Puzzle Pieces Icon -->
+  <g transform="translate(175, 50) scale(0.7)">
+    <!-- First puzzle piece (left) -->
+    <path d="M-5,0 h15 a6,6 0 0 1 12,0 a6,6 0 0 1 12,0 h5 v-20 h-44 z" fill="#2563EB" stroke="#A1A1AA" stroke-width="1" opacity="0.9"/>
+    
+    <!-- Second puzzle piece (right) -->
+    <path d="M39,0 h5 v20 h-44 v-20 h15 a6,6 0 0 1 12,0 a6,6 0 0 1 12,0" fill="#60A5FA" stroke="#A1A1AA" stroke-width="1" opacity="0.9"/>
+    
+    <!-- Decorative elements -->
+    <circle cx="16" cy="-7" r="3" fill="#FBBF24" opacity="0.9"/>
+    <circle cx="16" cy="7" r="3" fill="#FBBF24" opacity="0.9"/>
+    
+    <!-- Highlight effect -->
+    <path d="M-3,-2 h15 a6,6 0 0 1 8,0" stroke="white" stroke-width="1" opacity="0.6"/>
+    <path d="M37,-2 h-15 a6,6 0 0 1 -8,0" stroke="white" stroke-width="1" opacity="0.6"/>
+  </g>
+  
+  <!-- "Pairing" text -->
+  <text x="250" y="65" font-family="Arial, sans-serif" font-weight="700" font-size="42" fill="url(#text-gradient2)">Pairing</text>
+  
+  <!-- "Tool" text, positioned below with smaller size -->
+  <text x="180" y="90" font-family="Arial, sans-serif" font-weight="500" font-size="24" fill="#A1A1AA">Tool</text>
+  
+  <!-- Gradients for the elements -->
+  <defs>
+    <!-- Text gradient for "Name" -->
+    <linearGradient id="text-gradient1" x1="20" y1="40" x2="120" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+    
+    <!-- Text gradient for "Pairing" -->
+    <linearGradient id="text-gradient2" x1="240" y1="40" x2="380" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+</svg>
