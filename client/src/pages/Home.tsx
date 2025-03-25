@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NameInput from "@/components/NameInput";
 import PairingSection from "@/components/PairingSection";
-import BulkAddModal from "@/components/BulkAddModal";
 import { useToast } from "@/hooks/use-toast";
 import { generatePairs } from "@/lib/utils";
 import { Person } from "@shared/schema";
@@ -10,7 +9,6 @@ export default function Home() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [pairs, setPairs] = useState<Person[][]>([]);
   const [pairsGenerated, setPairsGenerated] = useState(false);
-  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const { toast } = useToast();
 
   const addPerson = (person: Person): boolean => {
@@ -134,7 +132,7 @@ export default function Home() {
             persons={persons}
             onRemovePerson={removePerson} 
             onClearPersons={clearPersons}
-            onBulkAdd={() => setIsBulkModalOpen(true)}
+            onAddPersons={handleBulkAdd}
           />
           
           <PairingSection 
@@ -150,13 +148,6 @@ export default function Home() {
           <p>Name Pairing Tool - A simple utility for randomly pairing people with other people's profile links</p>
         </footer>
       </div>
-
-      {/* Bulk Add Modal */}
-      <BulkAddModal 
-        isOpen={isBulkModalOpen} 
-        onClose={() => setIsBulkModalOpen(false)}
-        onAddPersons={handleBulkAdd}
-      />
     </div>
   );
 }
