@@ -14,4 +14,26 @@
   ::selection {
     @apply bg-blue-700 text-white;
   }
+  
+  /* Accessibility focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-opacity-75;
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  /* Ensure buttons have proper focus styles */
+  button:focus-visible, 
+  [role="button"]:focus-visible {
+    @apply ring-2 ring-blue-400 ring-offset-1 ring-offset-gray-900;
+  }
+
+  /* Skip to content link - hidden until focused */
+  .skip-to-content {
+    @apply sr-only;
+  }
+
+  .skip-to-content:focus-visible {
+    @apply not-sr-only fixed top-0 left-0 m-3 px-3 py-2 bg-blue-600 text-white z-50;
+    @apply rounded-md shadow-md;
+  }
 }
