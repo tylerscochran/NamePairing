@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Person } from "@shared/schema";
+import { Person } from "@/lib/schema";
 import { Download, Users2 } from "lucide-react";
 
 // Helper function to convert pairs to HTML format

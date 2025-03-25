@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Person } from "@shared/schema";
+import { Person } from "@/lib/schema";
 import { Upload, Trash2, DownloadCloud, AlertCircle, Shuffle } from "lucide-react";
 
 interface NameInputProps {

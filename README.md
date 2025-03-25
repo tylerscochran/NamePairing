@@ -4,13 +4,13 @@ A web application for generating random pairs from a list of names, designed to 
 
 ## Features
 
-- Generate random pairs from a list of names
-- Import names with URLs via CSV file upload
-- Drag-and-drop CSV import functionality
+- Import names via CSV file with drag-and-drop support
+- Generate random pairings using a derangement algorithm (no one is paired with themselves)
+- Export pairings as an HTML file
+- Fully client-side with localStorage data persistence
 - Dark mode support
-- Responsive design for all device sizes
-- Export pairs as HTML file
-- Client-side storage for saving your data
+- Responsive design
+- Accessibility optimized
 
 ## Getting Started
 
@@ -18,51 +18,70 @@ A web application for generating random pairs from a list of names, designed to 
 
 1. Clone the repository
 2. Install dependencies:
-   ```
+   ```bash
    npm install
    ```
 3. Start the development server:
-   ```
+   ```bash
    npm run dev
    ```
-4. Open your browser at `http://localhost:5000`
 
-## Deploying to GitHub Pages
+### GitHub Pages Deployment
 
-This project includes a custom build script to create a client-only version suitable for GitHub Pages deployment.
+This project can be deployed to GitHub Pages using one of two methods:
 
-### Manual Deployment
+#### Automated Deployment (Recommended)
 
-1. Run the GitHub Pages build script:
-   ```
+1. Push your code to a GitHub repository
+2. Enable GitHub Pages in your repository settings (Settings > Pages)
+3. Select "GitHub Actions" as the source
+4. The workflow will automatically build and deploy the app when you push to the main branch
+
+#### Manual Deployment
+
+1. Build the client-side application:
+   ```bash
    ./build-github-pages.sh
    ```
-2. This will create a build in the `dist` directory optimized for GitHub Pages
-3. Push the contents of the `dist` directory to the `gh-pages` branch of your repository
-
-### Automated Deployment via GitHub Actions
-
-This repository includes a GitHub Actions workflow for automatic deployment to GitHub Pages:
-
-1. Go to your repository's Settings > Pages
-2. Set the source to "GitHub Actions"
-3. Push to the main branch to trigger the deployment workflow
-4. Your app will be deployed to `https://[your-username].github.io/name-pairing-tool/`
+2. The built files will be in the `dist` directory
+3. Test the build locally:
+   ```bash
+   npx serve dist
+   ```
+4. Upload the contents of the `dist` directory to your hosting provider
 
 ## CSV Import Format
 
-The CSV file should have the following format:
+The application accepts CSV files with the following format:
 
 ```csv
-name,url
-John Doe,https://example.com/john
-Jane Smith,https://example.com/jane
+Name,URL
+John Smith,https://example.com/john
+Jane Doe,https://linkedin.com/in/jane
+Michael Johnson,
+Sarah Williams,https://github.com/sarah
 ```
 
-- The `name` field is required
-- The `url` field is optional (use an empty cell if no URL is available)
-- A sample template is available via the "Download Template" button in the app
+- The first column should contain the person's name (required)
+- The second column should contain the associated URL (optional)
+- A header row is optional but recommended
+- The URL can be left blank if not available
+- If URLs are not provided, the HTML export will use "#" as the href value
+
+## How It Works
+
+1. **Import Names**: Upload a CSV file with names and optional URLs
+2. **Generate Pairs**: The application uses a derangement algorithm to ensure no person is paired with themselves
+3. **Export Results**: Download the pairings as an HTML file for distribution
+
+## Using the HTML Export
+
+The generated HTML file includes:
+- Responsive design with dark/light mode support
+- Accessible markup with appropriate ARIA attributes
+- Skip-to-content link for keyboard users
+- Clean, minimal design that works well on all devices
 
 ## License
 
-© 2025 Tyler Cochran
+This project is licensed under the MIT License - see the LICENSE file for details.
