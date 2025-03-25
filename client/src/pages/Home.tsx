@@ -106,6 +106,37 @@ export default function Home() {
           />
         </main>
 
+        {/* Logo Showcase */}
+        <section className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-100 mb-4 text-center">Logo Options</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Option 1: Abstract Logo */}
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 1: Abstract Logo</h3>
+              <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
+                <img src="/assets/logo-abstract.svg" alt="Abstract Logo" className="w-32 h-32" />
+              </div>
+              <p className="text-gray-300 text-sm">
+                A minimalist abstract logo representing the concept of pairing with two circles 
+                connected by a line with golden connection points.
+              </p>
+            </div>
+            
+            {/* Option 2: Text Logo */}
+            <div className="bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 2: Text Logo</h3>
+              <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
+                <img src="/assets/logo-text.svg" alt="Text Logo" className="w-64" />
+              </div>
+              <p className="text-gray-300 text-sm">
+                A stylized text-based logo with "Name" and "Pairing" prominently displayed and 
+                connected by a flowing line that represents the pairing process.
+              </p>
+            </div>
+          </div>
+        </section>
+        
         {/* Footer */}
         <footer className="mt-8 text-center text-gray-400 text-sm py-4" role="contentinfo">
           <p>Name Pairing Tool - A simple utility for randomly pairing people with other people's profile links</p>
