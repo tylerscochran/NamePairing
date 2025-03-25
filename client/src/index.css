@@ -15,6 +15,28 @@
     @apply bg-blue-700 text-white;
   }
   
+  /* Fun title font options */
+  .font-pacifico {
+    font-family: 'Pacifico', cursive;
+  }
+  
+  .font-righteous {
+    font-family: 'Righteous', cursive;
+  }
+  
+  .font-fredoka {
+    font-family: 'Fredoka One', cursive;
+  }
+  
+  .font-bangers {
+    font-family: 'Bangers', cursive;
+  }
+  
+  /* Title gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600;
+  }
+  
   /* Accessibility focus styles - only show strong focus indicators for keyboard users */
   body:not(.keyboard-user) *:focus {
     outline: none;
