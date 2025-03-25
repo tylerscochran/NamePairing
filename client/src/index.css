@@ -15,15 +15,22 @@
     @apply bg-blue-700 text-white;
   }
   
-  /* Accessibility focus styles */
-  *:focus-visible {
+  /* Accessibility focus styles - only show strong focus indicators for keyboard users */
+  body:not(.keyboard-user) *:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  /* Only show focus ring when using keyboard navigation */
+  .keyboard-user *:focus-visible {
     @apply outline-none ring-2 ring-blue-500 ring-opacity-75;
     transition: box-shadow 0.2s ease-in-out;
   }
 
-  /* Ensure buttons have proper focus styles */
-  button:focus-visible, 
-  [role="button"]:focus-visible {
+  /* Ensure buttons have proper focus styles for keyboard users */
+  .keyboard-user button:focus-visible, 
+  .keyboard-user [role="button"]:focus-visible,
+  .keyboard-user a:focus-visible {
     @apply ring-2 ring-blue-400 ring-offset-1 ring-offset-gray-900;
   }
 

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface UseFocusTrapOptions {
   active?: boolean;
@@ -13,51 +13,70 @@ export function useFocusTrap({
   returnFocusOnDeactivate = true,
 }: UseFocusTrapOptions = {}) {
   const containerRef = useRef<HTMLElement | null>(null);
-  const previousActiveElement = useRef<Element | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!active) return;
+    
+    // Store the currently focused element so we can return to it later
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    
+    return () => {
+      // Return focus when the component unmounts
+      if (returnFocusOnDeactivate && previousFocusRef.current) {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, [active, returnFocusOnDeactivate]);
 
-    // Store the currently focused element to restore later
-    previousActiveElement.current = document.activeElement;
+  useEffect(() => {
+    if (!active || !containerRef.current) return;
 
-    // Focus the container itself if it's not yet focused
     const container = containerRef.current;
-    if (container && !container.contains(document.activeElement)) {
-      container.focus();
+    
+    // Find all focusable elements within the container
+    const focusableElements = container.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    
+    // Focus the first element when the trap is activated
+    if (firstElement) {
+      setTimeout(() => firstElement.focus(), 0);
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!container || event.key !== 'Tab') return;
-
-      // Get all focusable elements
-      const focusableElements = container.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-
-      // If shift+tab on first element, move to last element
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement?.focus();
+      // Handle Tab key to keep focus within the container
+      if (event.key === 'Tab') {
+        // If Shift+Tab pressed on first element, move to last element
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement?.focus();
+        } 
+        // If Tab pressed on last element, move to first element
+        else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement?.focus();
+        }
       }
-      // If tab on last element, cycle back to first element
-      else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement?.focus();
+      
+      // Handle Escape key to close modal if needed
+      if (event.key === 'Escape') {
+        // This could trigger a close callback if provided
+        if (returnFocusOnDeactivate && previousFocusRef.current) {
+          previousFocusRef.current.focus();
+        }
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-
+    // Add event listener
+    container.addEventListener('keydown', handleKeyDown);
+    
+    // Clean up
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-
-      // Return focus to previous element when unmounting
-      if (returnFocusOnDeactivate && previousActiveElement.current) {
-        (previousActiveElement.current as HTMLElement)?.focus?.();
-      }
+      container.removeEventListener('keydown', handleKeyDown);
     };
   }, [active, returnFocusOnDeactivate]);
 

@@ -119,7 +119,7 @@ export default function Home() {
     <div className="bg-gray-900 font-sans min-h-screen text-gray-100">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header Section */}
-        <header className="text-center mb-8">
+        <header className="text-center mb-8" role="banner">
           <h1 className="text-3xl font-semibold text-gray-100 mb-2">Name Pairing Tool</h1>
           <p className="text-gray-300 max-w-2xl mx-auto">
             A simple utility for randomly pairing people with other people's profile links
@@ -127,7 +127,7 @@ export default function Home() {
         </header>
 
         {/* Main Content */}
-        <main className="flex flex-col gap-8">
+        <main id="main-content" className="flex flex-col gap-8" role="main">
           <NameInput 
             persons={persons}
             onRemovePerson={removePerson} 
@@ -144,7 +144,7 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="mt-8 text-center text-gray-400 text-sm py-4">
+        <footer className="mt-8 text-center text-gray-400 text-sm py-4" role="contentinfo">
           <p>Name Pairing Tool - A simple utility for randomly pairing people with other people's profile links</p>
         </footer>
       </div>
