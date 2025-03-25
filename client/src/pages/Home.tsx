@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NameInput from "@/components/NameInput";
 import PairingSection from "@/components/PairingSection";
-import { useToast } from "@/hooks/use-toast";
 import { generatePairs } from "@/lib/utils";
 import { Person } from "@shared/schema";
 
@@ -9,24 +8,14 @@ export default function Home() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [pairs, setPairs] = useState<Person[][]>([]);
   const [pairsGenerated, setPairsGenerated] = useState(false);
-  const { toast } = useToast();
 
   const addPerson = (person: Person): boolean => {
     // Check if a person with the same name already exists
     if (persons.some(p => p.name === person.name)) {
-      toast({
-        title: "Name already exists",
-        description: "This name is already in the list",
-        variant: "destructive",
-      });
       return false;
     }
     
     setPersons((prevPersons) => [...prevPersons, person]);
-    toast({
-      title: "Person added",
-      description: "Person added successfully",
-    });
     return true;
   };
 
@@ -50,38 +39,20 @@ export default function Home() {
     setPersons([]);
     setPairs([]);
     setPairsGenerated(false);
-    toast({
-      title: "All entries cleared",
-      description: "Person list has been cleared",
-    });
   };
 
   const handleGeneratePairs = () => {
     if (persons.length === 0) {
-      toast({
-        title: "No entries",
-        description: "Please add at least one person first",
-        variant: "destructive",
-      });
       return;
     }
 
     const newPairs = generatePairs(persons);
     setPairs(newPairs);
     setPairsGenerated(true);
-    toast({
-      title: "Pairs generated",
-      description: "Pairs generated successfully",
-    });
   };
 
   const handleBulkAdd = (newPersons: Person[]) => {
     if (newPersons.length === 0) {
-      toast({
-        title: "No valid entries",
-        description: "No valid persons found in the input",
-        variant: "destructive",
-      });
       return;
     }
 
@@ -101,17 +72,6 @@ export default function Home() {
         const newPairs = generatePairs(updatedPersons);
         setPairs(newPairs);
       }
-      
-      toast({
-        title: "Entries added",
-        description: `${addedCount} person${addedCount !== 1 ? 's' : ''} added successfully`,
-      });
-    } else {
-      toast({
-        title: "No new entries",
-        description: "No new entries added - all were duplicates",
-        variant: "destructive",
-      });
     }
   };
 
