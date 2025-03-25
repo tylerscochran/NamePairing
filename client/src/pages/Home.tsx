@@ -111,7 +111,17 @@ export default function Home() {
         
         {/* Footer */}
         <footer className="mt-8 text-center text-gray-400 text-sm py-4" role="contentinfo">
-          <p>Name Pairing Tool - A simple utility for randomly pairing people with other people's profile links</p>
+          <p>
+            Name Pairing Tool &nbsp;&copy; {new Date().getFullYear()} &nbsp;
+            <a 
+              href="https://www.tylercochran.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:underline"
+            >
+              Tyler Cochran
+            </a>
+          </p>
         </footer>
       </div>
     </div>
