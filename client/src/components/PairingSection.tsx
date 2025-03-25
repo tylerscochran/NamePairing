@@ -45,12 +45,12 @@ const convertToHTML = (pairs: Person[][]): string => {
   // Generate HTML content for each pair - without titles
   pairs.forEach((pair) => {
     if (pair.length >= 2) {
-      const person1 = pair[0];
-      const person2 = pair[1];
-      const url1 = person1.url || "#";
+      const person = pair[0];
+      const pairedWith = pair[1];
+      const url = pairedWith.url || "#"; // Use the paired person's URL
       
-      // Create the HTML entry in the format: <p><a href="[URL1]" alt="[Name1]">[Name2]</a></p>
-      html += `  <p><a href="${url1}" alt="${person1.name}">${person2.name}</a></p>\n`;
+      // Create the HTML entry in the format: <p><a href="[URL of pairedWith]" alt="[Name of pairedWith]">[Name of person]</a></p>
+      html += `  <p><a href="${url}" alt="${pairedWith.name}">${person.name}</a></p>\n`;
     } else if (pair.length === 1) {
       // For single person (no partner)
       html += `  <p>Solo: ${pair[0].name}</p>\n`;
