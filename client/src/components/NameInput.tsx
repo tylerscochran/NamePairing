@@ -201,11 +201,6 @@ export default function NameInput({
               Download sample CSV template
             </button>
           </div>
-          <div className="max-w-sm mx-auto mt-4 text-xs text-gray-400 bg-gray-700 p-2 rounded border border-gray-600">
-            <p className="font-medium mb-1">Expected CSV format:</p>
-            <p className="font-mono">Name,URL</p>
-            <p className="font-mono">John Smith,https://example.com/john</p>
-          </div>
         </div>
       )}
 
