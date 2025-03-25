@@ -154,15 +154,15 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Option 4: Network Nodes Icon */}
-            <div className="bg-gray-900 p-6 rounded-lg">
-              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 4: Network Hub</h3>
+            {/* Option 4: Network Nodes Icon (Revised) */}
+            <div className="bg-gray-900 p-6 rounded-lg border-2 border-blue-500">
+              <h3 className="text-lg font-medium text-blue-400 mb-3">Option 4: Network Hub (Revised)</h3>
               <div className="flex justify-center p-4 bg-gray-800 rounded-lg mb-4">
-                <img src="/assets/logo-text-option4.svg" alt="Network Nodes Logo" className="w-64" />
+                <img src="/assets/logo-text-option4-revised.svg" alt="Network Nodes Logo Revised" className="w-96" />
               </div>
               <p className="text-gray-300 text-sm">
-                A central hub connected to multiple satellite nodes in different colors, emphasizing the 
-                concept of one-to-many connections.
+                A central hub connected to multiple satellite nodes in different colors, with "Tool" placed on the same 
+                line as "Name" and "Pairing" with matching styling. 
               </p>
               <div className="mt-2 bg-gray-700 p-2 rounded-lg">
                 <div className="flex justify-center p-2 bg-gray-800 rounded-lg">
